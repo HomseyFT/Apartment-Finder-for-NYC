@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from functools import lru_cache
+from pathlib import Path
 from typing import List, Optional
 
 from dotenv import load_dotenv
@@ -39,10 +40,15 @@ class AppConfig(BaseSettings):
         description="Max number of apartments to return after filtering.",
     )
 
-    # NYC Open Data / HTTP
+    # Third-party APIs / HTTP
     nyc_open_data_app_token: Optional[str] = Field(
         default=None,
         env="NYC_OPEN_DATA_APP_TOKEN",
+    )
+
+    rentcast_api_key: Optional[str] = Field(
+        default=None,
+        env="RENTCAST_API_KEY",
     )
 
     http_proxy: Optional[str] = Field(default=None, env="HTTP_PROXY")
@@ -59,7 +65,16 @@ class AppConfig(BaseSettings):
 
 
 def _load_base_config() -> AppConfig:
-    load_dotenv()  # Load from .env if present
+    # First, load from a .env in the current working directory (if any),
+    # which is handy when running the CLI from the project root.
+    load_dotenv()
+
+    # Also attempt to load a .env that lives at the project root (the parent
+    # directory of "src"), so that the config works regardless of CWD.
+    this_file = Path(__file__).resolve()
+    project_root = this_file.parents[2]  # nyc_apartments/ (alongside src/)
+    load_dotenv(project_root / ".env")
+
     return AppConfig()  # type: ignore[arg-type]
 
 

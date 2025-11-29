@@ -18,6 +18,7 @@ src/nyc_apartments.egg-info/top_level.txt
 src/nyc_apartments/providers/__init__.py
 src/nyc_apartments/providers/base.py
 src/nyc_apartments/providers/nyc_open_data_hny_buildings.py
+src/nyc_apartments/providers/rentcast_rental_listings.py
 src/nyc_apartments/storage/__init__.py
 src/nyc_apartments/storage/json_store.py
 src/nyc_apartments/storage/sqlite_store.py
