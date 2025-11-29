@@ -1,0 +1,12 @@
+requests
+pydantic
+python-dotenv
+typer[all]
+rich
+geopy
+
+[dev]
+pytest
+black
+mypy
+ruff

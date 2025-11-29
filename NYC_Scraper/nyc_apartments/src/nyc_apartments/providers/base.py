@@ -22,15 +22,24 @@ class BaseProvider(abc.ABC):
 
 
 def _iter_provider_classes() -> List[Type[BaseProvider]]:
-    """Import all submodules and collect BaseProvider subclasses."""
+    """Import all submodules of the providers package and collect subclasses.
+
+    Note: ``__path__`` only exists on packages, not on this module, so we first
+    resolve the parent package object and then use its ``__path__`` for
+    discovery.
+    """
 
     providers: List[Type[BaseProvider]] = []
 
-    # This module lives in nyc_apartments.providers
+    # This module lives in nyc_apartments.providers.base
     package_name = __name__.rsplit(".", 1)[0]
+    package = importlib.import_module(package_name)
+    package_path = getattr(package, "__path__", None)
+    if package_path is None:
+        return providers
 
     # Walk all modules in this package.
-    for module_info in pkgutil.iter_modules(__path__, prefix=package_name + "."):
+    for module_info in pkgutil.iter_modules(package_path, prefix=package_name + "."):
         module = importlib.import_module(module_info.name)
         for _name, obj in inspect.getmembers(module, inspect.isclass):
             if issubclass(obj, BaseProvider) and obj is not BaseProvider:
