@@ -1,0 +1,6 @@
+requests
+pydantic
+python-dotenv
+typer[all]
+rich
+geopy
