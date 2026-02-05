@@ -1,0 +1,13 @@
+requests
+pydantic
+pydantic-settings
+python-dotenv
+typer[all]
+rich
+geopy
+
+[dev]
+pytest
+black
+mypy
+ruff
